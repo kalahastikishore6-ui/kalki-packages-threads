@@ -11,6 +11,7 @@ const corsHeaders = {
 
 interface ContactEmailRequest {
   name: string;
+  phone: string;
   email: string;
   subject: string;
   message: string;
@@ -23,11 +24,11 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { name, email, subject, message }: ContactEmailRequest = await req.json();
+    const { name, phone, email, subject, message }: ContactEmailRequest = await req.json();
 
     // Validate inputs
-    if (!name || !email || !subject || !message) {
-      console.error("Missing required fields:", { name, email, subject, message });
+    if (!name || !phone || !email || !subject || !message) {
+      console.error("Missing required fields:", { name, phone, email, subject, message });
       return new Response(
         JSON.stringify({ error: "All fields are required" }),
         {
@@ -37,27 +38,50 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log("Sending contact email from:", email);
+    console.log("Sending contact email from:", email, "Phone:", phone);
 
     // Send notification email to Kalki Groups
     const emailResponse = await resend.emails.send({
-      from: "Kalki Groups Contact <onboarding@resend.dev>",
+      from: "Sri Sorakayala Thatha Gunnies <onboarding@resend.dev>",
       to: ["kalki182@gmail.com"],
       subject: `New Contact: ${subject}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #B8860B;">New Contact Form Submission</h2>
-          <hr style="border: 1px solid #eee;">
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #fff; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+          <div style="background: linear-gradient(135deg, #B8860B, #DAA520); padding: 20px; text-align: center;">
+            <h1 style="color: #fff; margin: 0; font-size: 24px;">Sri Sorakayala Thatha Gunnies Merchant</h1>
+          </div>
           
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Subject:</strong> ${subject}</p>
+          <div style="padding: 30px;">
+            <h2 style="color: #B8860B; margin-top: 0;">New Contact Form Submission</h2>
+            
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold; color: #333;">Name:</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">${name}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold; color: #333;">Phone:</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">${phone}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold; color: #333;">Gmail ID:</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">${email}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; font-weight: bold; color: #333;">Subject:</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eee; color: #666;">${subject}</td>
+              </tr>
+            </table>
+            
+            <h3 style="color: #333; margin-top: 20px;">Message:</h3>
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; border-left: 4px solid #B8860B;">
+              <p style="margin: 0; color: #555; line-height: 1.6;">${message}</p>
+            </div>
+          </div>
           
-          <h3 style="color: #333;">Message:</h3>
-          <p style="background: #f9f9f9; padding: 15px; border-radius: 5px;">${message}</p>
-          
-          <hr style="border: 1px solid #eee;">
-          <p style="color: #666; font-size: 12px;">This email was sent from the Kalki Groups website contact form.</p>
+          <div style="background: #f5f5f5; padding: 15px; text-align: center; border-top: 1px solid #eee;">
+            <p style="color: #999; font-size: 12px; margin: 0;">This email was sent from the Sri Sorakayala Thatha Gunnies Merchant website contact form.</p>
+          </div>
         </div>
       `,
     });
